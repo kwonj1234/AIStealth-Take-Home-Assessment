@@ -18,43 +18,18 @@ Hint: The solution is only a few lines of code.
 console.log("background.js running") // background console logs can be found by inspecting the extension in chrome://extensions > developer mode > then click on "service worker" > then go to console
 
 /* YOUR CODE BELOW THIS LINE :) */  
-document.addEventListener('visibilitychange', (e) => { e.stopImmediatePropagation() }, true);
 
+// Attempt using stopImmediatePropagation
 for (event_name of ["visibilitychange", "webkitvisibilitychange", "blur"]) {
+  document.addEventListener(event_name, (event) => {
+    event.stopImmediatePropagation()
+  }, true);
+  
   window.addEventListener(event_name, (event) => {
     event.stopImmediatePropagation()
   }, true);
 }
 
-(function(){
-  // visibilitychange events are captured and stopped 
-  document.addEventListener("visibilitychange", function(e) {
-      e.stopImmediatePropagation();
-  }, true);
-  // document.visibilityState always returns false
-  Object.defineProperty(Document.prototype, "hidden", {
-      get: function hidden() {
-          return false;
-      },
-      enumerable: true,
-      configurable: true
-  });
-  // document.visibilityState always returns "visible"
-  Object.defineProperty(Document.prototype, "visibilityState", {
-      get: function visibilityState() {
-          return "visible";
-      },
-      enumerable: true,
-      configurable: true
-  });
-  })()
-
+// Overwrite document properties
 Object.defineProperty(document, 'visibilityState', {value: 'visible', writable: true});
 Object.defineProperty(document, 'hidden', {value: false, writable: true});
-document.dispatchEvent(new Event("visibilitychange"));
-
-document.addEventListener("visibilitychange", function(e) {
-  Object.defineProperty(document, 'visibilityState', {value: 'visible', writable: true});
-  Object.defineProperty(document, 'hidden', {value: false, writable: true});
-  document.dispatchEvent(new Event("visibilitychange"));
-}, true);
