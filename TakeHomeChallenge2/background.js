@@ -18,11 +18,14 @@ Hint: The solution is only a few lines of code.
 console.log("background.js running") // background console logs can be found by inspecting the extension in chrome://extensions > developer mode > then click on "service worker" > then go to console
 
 /* YOUR CODE BELOW THIS LINE :) */  
-  document.addEventListener('visibilitychange', (newVal) => {
+document.addEventListener('visibilitychange', (newVal) => {
+  if (document.visibilityState === "hidden") {
     console.log(newVal)
-  })
+    newVal.target.defaultView.focus()
+  }
+})
 
-  document.addEventListener("blur", function() {
-    console.log(this.document.visibilityState)
-    document.focus()
+document.addEventListener("blur", function() {
+  console.log(this.document.visibilityState)
+  document.focus()
 }, false)
