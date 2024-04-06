@@ -23,13 +23,28 @@ console.log("background.js running") // background console logs can be found by 
 for (event_name of ["visibilitychange", "webkitvisibilitychange", "blur"]) {
   document.addEventListener(event_name, (event) => {
     event.stopImmediatePropagation()
+    event.stopPropagation()
+    console.log(document.visibilityState)
+    console.log(event)
+    
   }, true);
   
   window.addEventListener(event_name, (event) => {
     event.stopImmediatePropagation()
+    event.stopPropagation()
+    console.log(document.visibilityState)
+    console.log(event)
+    window.focus()
   }, true);
 }
 
-// Overwrite document properties
+// Attempt to propagate another visibilitychange event when hidden state occurs
+document.addEventListener("visibilitychange", (e) => {
+  if (document.visibilityState === "hidden") {
+    document.dispatchEvent(new Event('visibilitychange'))
+  }
+})
+
+// Overwrite document properties (Not Allowed)  
 Object.defineProperty(document, 'visibilityState', {value: 'visible', writable: true});
 Object.defineProperty(document, 'hidden', {value: false, writable: true});
