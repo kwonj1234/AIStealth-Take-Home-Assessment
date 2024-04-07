@@ -22,18 +22,14 @@ console.log("background.js running") // background console logs can be found by 
 // Attempt using stopImmediatePropagation
 for (event_name of ["visibilitychange", "webkitvisibilitychange", "blur"]) {
   document.addEventListener(event_name, (event) => {
+    document.focus()
     event.stopImmediatePropagation()
     event.stopPropagation()
-    console.log(document.visibilityState)
-    console.log(event)
-    
   }, true);
   
   window.addEventListener(event_name, (event) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
-    console.log(document.visibilityState)
-    console.log(event)
     window.focus()
   }, true);
 }
@@ -43,8 +39,8 @@ let eventDispatched = false
 document.addEventListener("visibilitychange", (e) => {
   if (eventDispatched) return;
   if (document.visibilityState === "hidden") {
-    document.dispatchEvent(new Event('visibilitychange'))
     eventDispatched = true
+    document.dispatchEvent(new Event('visibilitychange'))
     setTimeout(() => {
       eventDispatched = false
     }, 1400)
