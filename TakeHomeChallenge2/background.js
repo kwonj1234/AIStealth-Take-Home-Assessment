@@ -39,9 +39,15 @@ for (event_name of ["visibilitychange", "webkitvisibilitychange", "blur"]) {
 }
 
 // Attempt to propagate another visibilitychange event when hidden state occurs
+let eventDispatched = false
 document.addEventListener("visibilitychange", (e) => {
+  if (eventDispatched) return;
   if (document.visibilityState === "hidden") {
     document.dispatchEvent(new Event('visibilitychange'))
+    eventDispatched = true
+    setTimeout(() => {
+      eventDispatched = false
+    }, 1400)
   }
 })
 
